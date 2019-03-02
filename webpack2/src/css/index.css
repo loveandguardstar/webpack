@@ -1,0 +1,25 @@
+html,body{
+  background-color: pink;
+}
+ul {
+  list-style: none;
+  background: pink;
+}
+.box {
+  width: 200px;
+  height: 160px;
+  /* 默认情况下，webpack无法处理 css文件中的 url 地址，不管是图片库还是字体库，只要是URL， 都处理不了 */
+  background: url('../images/1.jpg');
+  /* backgournd-size: cover; */
+  background-position-x: 1200px;
+  background-position-y: 600px;
+}
+.box2 {
+  width: 200px;
+  height: 160px;
+  /* 默认情况下，webpack无法处理 css文件中的 url 地址，不管是图片库还是字体库，只要是URL， 都处理不了 */
+  background: url('../images2/1.jpg');
+  /* backgournd-size: cover; */
+  background-position-x: 1200px;
+  background-position-y: 600px;
+}
