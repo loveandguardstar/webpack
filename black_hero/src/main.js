@@ -2,7 +2,7 @@
 
 //1.  导入jQuery
 // import **** from ***是ES6 中导入模块的方式
-// import $ from 'jquery'
+// import $ from 'jquery' 
 const $ = require('jquery')
 
 $(function() {
