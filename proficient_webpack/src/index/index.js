@@ -1,4 +1,4 @@
-import { helloworld } from './helloworld.js'
+import { helloworld } from '../common.js'
 
 document.write(helloworld())
 
