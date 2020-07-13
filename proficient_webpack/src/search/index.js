@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './search.less';
-import gitPng from './image/gitPng.png'
+import gitPng from './image/git.png'
 import { helloworld } from '../common.js'
 import { a } from './tree-shaking.js'
 

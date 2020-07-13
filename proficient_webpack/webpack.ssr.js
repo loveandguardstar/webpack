@@ -7,36 +7,39 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
 const setMPA = () => {
     const entry = {}
     const htmlWebpackPlugin = []
 
-    const entryFiles = glob.sync(path.join(__dirname, '/src/*/index.js'))
+    const entryFiles = glob.sync(path.join(__dirname, '/src/*/index-server.js'))
 
     Object.keys(entryFiles)
         .map(index => {
             const entryFile = entryFiles[index]
-            const match = entryFile.match(/src\/(.*)\/index\.js/)
+            const match = entryFile.match(/src\/(.*)\/index-server\.js/)
             const pageName = match && match[1]
 
             entry[pageName] = entryFile
-            htmlWebpackPlugin.push(
-                new HtmlWebpackPlugin({ // plugins 数组
-                    template: path.join(__dirname, `src/${pageName}/index.html`),
-                    filename: `${pageName}.html`,
-                    chunks: ['vendors', pageName],
-                    inject: true,
-                    minify: {
-                        html5: true,
-                        collapseWhitespace: true,
-                        preserveLineBreaks: false,
-                        minifyCSS: true,
-                        minifyJS: true,
-                        removeComments: false
-                    }
-                })
-            )
+            if (pageName) {
+                htmlWebpackPlugin.push(
+                    new HtmlWebpackPlugin({ // plugins 数组
+                        template: path.join(__dirname, `src/${pageName}/index.html`),
+                        filename: `${pageName}.html`,
+                        chunks: ['vendors', pageName],
+                        inject: true,
+                        minify: {
+                            html5: true,
+                            collapseWhitespace: true,
+                            preserveLineBreaks: false,
+                            minifyCSS: true,
+                            minifyJS: true,
+                            removeComments: false
+                        }
+                    })
+                )
+            }
         })
     return {
         entry,
@@ -56,12 +59,13 @@ module.exports = {
     // },
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: '[name]_[chunkhash:8].js' // 占位符进行区分
+        filename: '[name]-server.js', // 占位符进行区分
+        libraryTarget: 'umd'
     },
     module: {
         rules: [
             {
-                test: /\.js$/, use: ['babel-loader', 'eslint-loader']
+                test: /\.js$/, use: ['babel-loader']
             },
             {
                 test: /\.css$/, use: [
@@ -94,10 +98,10 @@ module.exports = {
                 ]
             },
             {
-                test: /(\.jpg|\.jpeg|\.png|\.gif)$/,
+                test: /\.(jpg|jpe?g|png|gif)$/,
                 use: [
                     {
-                        loader: 'file-loader',
+                        loader: require.resolve('file-loader'),
                         options: {
                             // limit: 10240
                             name: '[name]_[hash:8].[ext]'
@@ -148,7 +152,8 @@ module.exports = {
                     global: 'ReactDOM',
                 },
             ],
-        })
+        }),
+        new FriendlyErrorsWebpackPlugin()
     ].concat(htmlWebpackPlugin),
     // cacheGroups: {
     //     commons: {
